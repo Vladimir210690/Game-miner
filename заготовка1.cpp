@@ -1,75 +1,73 @@
 #include <iostream>
 #include <ctime>
+#include <conio.h>
+#include <windows.h>
 
-#define ROW 20 // Константа строк игрового поля
-#define COL 40 // Константа колонок игрового поля
-#define SIZE 100 // Константа максимального размера массива для бомб 
+#define FIGUR 4 // Константа для масива фигуры (фигура не будет иметь больше 4 переменых)
+#define BAG 100 // Константа для размера корзины
 
 using namespace std;
 
-void Draw(int arr[], int brr[], int a, int b) { // Функция отрисовки игрового поля
-	for (int i = 0; i < b; i++) { // Отрисовывает верхнюю границу
-		cout << "#";
-	}
-	cout << endl;
+//int cubic[2][2]{ {0,5}, {0,6} };
 
-	for (int i = 0; i < a; i++) { // Отрисовка центра и всех деталей
-		for (int j = 0; j < b; j++) {
-			if (j == 0 || j == b - 1) {
-				cout << "#";
-			}
-			
-			else { // Отрисовка бомб и пустоты
-				bool yas = false; // Проверяет наличие бомбы
-				for (int k = 0; k < SIZE; k++) {
-					if (arr[k] == i && brr[k] == j) {
-						yas = true; // Если бомбы есть рисуем её
-						cout << "*";
-					}
-				}
-				if (yas == false) { // Если бомбы нет рисуем пустоту
-					cout << " ";
-				}
-			}
+enum motion{ Down, Right, Left, Stop = 0, // Перечесления направлений движения фигуры
+};
+motion run;
+
+void Input() { // Задаем и считываем клавиши управления
+	if (_kbhit()) {
+		switch (_getch()) {
+		case 'a':
+			run = Left;
+			break;
+		case 's':
+			run = Right;
+			break;
 		}
-		cout << endl;
-	}
-
-	for (int i = 0; i < b; i++) { // Отрисовка нижней границы
-		cout << "#";
-	}
-	cout << endl;
-}
-
-void Bomb(int arr[], int brr[], int totalbomb, int a) { // Функция генерирующая координаты бомб
-
-	for (int i = 0; i < a; i++) {
-		arr[i] = rand() % ROW;
-		brr[i] = rand() % COL;
-		totalbomb--; // Уменьшием количество бомб после каждой генерации
-		if (totalbomb == 0)
-			break; // Выходим из цикла, когда количество бомб заканчивается
 	}
 }
 
-long main() {
-	setlocale(LC_ALL, "Russian");
-	srand(time(NULL));
-	
-	int totalbomb = 0; // Количество бомб на карте
-	cout << "How many to do bomb: ";
-	cin >> totalbomb;
+void Logik(int arrX[], int brrY[], int crrX[], int drrY[]) { // Логика игры
+	run = Down;
+	switch (run) { // Определение направления движения фигуры и смена направления
+	case Left:
+		for (int i = 0; i < FIGUR; i++) {
+			arrX[i]--;
+		}
+		break;
+	case Right:
+		for (int i = 0; i < FIGUR; i++) {
+			arrX[i]++;
+		}
+		break;
+	case Down:
+		for (int i = 0; i < FIGUR; i++) {
+			brrY[i]++;
+		}
+		break;
+	}
+	for (int i = 0; i < FIGUR; i++) { // Если фигура уперлась в пол или другую фигуру - останавливаем её движение
+		if (brrY[i] == BAG) {
+			run = Stop;
+		}
+	}
+	// Далее написать функцию, которае при run = stop перезаписывает значения из массива фигуры в массив корзины.
+	//Массив корзины при этом обнуляется и в него записываются координаты новой фигуры вверху корзины.
+	// И новая фигура так-же начинает опускаться вниз
+}
 
-	int bombX[SIZE]{}; // Хранит координаты бомбы по x
-	int bombY[SIZE]{}; // Хранит координаты бомбы по y
+int main() {
+	int bagX[BAG]{}; // Массивы - корзина для фигур
+	int bagY[BAG]{};
+
+	int figuraX[FIGUR]{ 5,6,5,6 }; // Параметры фигуры по горизонтали
+	int figuraY[FIGUR]{ 0,0,1,1 }; // Параметры фигуры по вертикали
 
 	while (true) {
 		system("cls");
-
-		Bomb(bombX, bombY, totalbomb, SIZE);
-		Draw(bombX, bombY, ROW, COL);
 		
-		system("pause");
+		Input();
+		Logik(figuraX, figuraY, bagX, bagY);
 	}
 	return 0;
 }
