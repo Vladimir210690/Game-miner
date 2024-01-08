@@ -9,7 +9,7 @@ int row = 20; //Размер игрового поля
 int col = 40;
 
 class Ball { // Класс отвечающий за прыгающие мячи
-public:
+private:
 	int x = rand() % row + 1; // Координата мяча по x
 	int y = rand() % col + 1; // Координата мяча по y
 	int direction; // Направление полета мяча
@@ -18,7 +18,7 @@ public:
 		UPRIGHT, UPLEFT, DOWNRIGHT, DOWNLEFT
 	};
 	run go;
-
+public:
 	void Motion() { // Метод определяет начальное направление полета мяча
 		direction = 1;
 		switch (direction) {
