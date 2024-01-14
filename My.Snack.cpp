@@ -108,8 +108,6 @@ public:
 	}
 };
 
-
-
 int main() {
 	srand(time(NULL));
 	Snacs Game;
