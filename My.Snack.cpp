@@ -5,7 +5,7 @@
 
 using namespace std;
 
-class Snacs{
+class Snack{
 private:
 	int x = 0, y = 0, frX = 0, frY = 0, score = 0; // Переменные отвечающие за голову, фрукты и счет игры
 	const int ROW = 20, COL = 40; // Переменные отвечающие за размер карты
@@ -18,7 +18,7 @@ private:
 	};
 	Motion Go;
 public:
-	Snacs() { // Конструктор класса отвечающий за стартовое положение головы и фрукта
+	Snack() { // Конструктор класса отвечающий за стартовое положение головы и фрукта
 		gameOver = true;
 		x = ROW / 2;
 		y = COL / 2;
@@ -110,7 +110,7 @@ public:
 
 int main() {
 	srand(time(NULL));
-	Snacs Game;
+	Snack Game;
 	while (true) {
 		system("cls");
 		Game.Draw();
